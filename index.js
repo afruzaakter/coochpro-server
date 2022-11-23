@@ -20,6 +20,7 @@ async function run(){
         await client.connect();
         const genderCollection = client.db('genderList').collection('gender');
         const religionCollection = client.db('religionList').collection('religion');
+        const MaritalStatusCollection = client.db('maritalList').collection('marital');
 
         // --------------Gender all method start--------------
         // --------------Gender post method--------------
@@ -41,16 +42,19 @@ async function run(){
         // --------------------Gender  Update method-----------------------
         app.put('/gender/:id', async(req, res) =>{
             const id = req.params.id;
+            console.log(id);
+            const gender = req.body;
             const filter = {_id: ObjectId(id)};
             const options = {upsert: true};
             const updateDoc = {
                 $set: {
-                    gender: data.gender,
+                    gender: gender.gender,
+                   
                 }
-            }
+            };     
             const result = await genderCollection.updateOne(filter, updateDoc, options);
             res.send(result);
-        })
+        });
 
         // --------------------Gender Delete method ------------------
           app.delete('/gender/:id', async(req, res) =>{
@@ -59,20 +63,10 @@ async function run(){
             const result = await genderCollection.deleteOne(query)
             res.send(result);
           })       
-         // --------------Gender all method End--------------
+         // --------------Gender all method End-------------- 
 
-
-
+        // --------------Religion  all method start--------------
         // ------------------Religion post method -------------
-        // app.post('/religion', async(req, res)=>{
-        //     const religion = req.body;
-        //     if(!religion.religion){
-        //         return res.send({success: false, error: "Please Provide all information"})
-        //     }
-        //     const result = await religionCollection.insertOne(religion);
-        //     res.send({success: true, message: `Successfully inserted ${religion.religion}`});
-
-        // })
         app.post('/religion', async(req, res) =>{
             const newReligion = req.body;
             const result = await religionCollection.insertOne(newReligion);
@@ -84,8 +78,31 @@ async function run(){
         const cursor = religionCollection.find(query);
         const religions = await cursor.toArray();
         res.send(religions)
-       })
+       }) 
+        // --------------------Religion Delete method ------------------
+        app.delete('/religion/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await religionCollection.deleteOne(query)
+            res.send(result);
+          }) 
+        // --------------------Religion  Update method-----------------------
+        app.put('/religion/:id', async(req, res) =>{
+            const id = req.params.id;
+            const religion = req.body;
+            const filter = {_id: ObjectId(id)};
+            const options = {upsert: true};
+            const updateDoc = {
+                $set: {
+                    religion: religion.religion,
+                   
+                }
+            };     
+            const result = await religionCollection.updateOne(filter, updateDoc, options);
+            res.send(result);
+        });
 
+     // --------------Religion  all method end--------------
 
     }
     finally{
