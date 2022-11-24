@@ -22,6 +22,9 @@ async function run(){
         const religionCollection = client.db('religionList').collection('religion');
         const maritalStatusCollection = client.db('maritalList').collection('marital');
         const bloodGroupCollection = client.db('bloodGroupList').collection('blood');
+        const locationCollection = client.db('locationList').collection('location');
+        const divisionCollection = client.db('divisionList').collection('division');
+        const districtCollection = client.db('districtList').collection('district');
 
         // --------------Gender all method start--------------
         // --------------Gender post method--------------
@@ -183,6 +186,125 @@ async function run(){
         });
 
      // --------------Blood Group all method end--------------
+
+    
+      // --------------Location all method start--------------
+        // ------------------Location post method -------------
+        app.post('/location', async(req, res) =>{
+            const newLocation = req.body;
+            const result = await locationCollection.insertOne(newLocation);
+            res.send(result);
+        }) 
+        // ----------------Location get method----------------
+       app.get('/location', async(req, res) =>{
+        const query = {};
+        const cursor = locationCollection.find(query);
+        const location = await cursor.toArray();
+        res.send(location)
+       }) 
+        // -------------------Location Delete method ------------------
+        app.delete('/location/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await locationCollection.deleteOne(query)
+            res.send(result);
+          }) 
+        // --------------------Location  Update method-----------------------
+        app.put('/location/:id', async(req, res) =>{
+            const id = req.params.id;
+            const location = req.body;
+            const filter = {_id: ObjectId(id)};
+            const options = {upsert: true};
+            const updateDoc = {
+                $set: {
+                    location: location.location,
+                   
+                }
+            };     
+            const result = await locationCollection.updateOne(filter, updateDoc, options);
+            res.send(result);
+        });
+
+     // --------------Location all method end--------------
+         
+      // --------------Division all method start--------------
+        // ------------------Division post method -------------
+        app.post('/division', async(req, res) =>{
+            const newDivision = req.body;
+            const result = await divisionCollection.insertOne(newDivision);
+            res.send(result);
+        }) 
+        // ----------------Division get method----------------
+       app.get('/division', async(req, res) =>{
+        const query = {};
+        const cursor = divisionCollection.find(query);
+        const location = await cursor.toArray();
+        res.send(location)
+       }) 
+        // -------------------Division Delete method ------------------
+        app.delete('/division/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await divisionCollection.deleteOne(query)
+            res.send(result);
+          }) 
+        // --------------------Division  Update method-----------------------
+        app.put('/division/:id', async(req, res) =>{
+            const id = req.params.id;
+            const division = req.body;
+            const filter = {_id: ObjectId(id)};
+            const options = {upsert: true};
+            const updateDoc = {
+                $set: {
+                    division: division.division,
+                   
+                }
+            };     
+            const result = await divisionCollection.updateOne(filter, updateDoc, options);
+            res.send(result);
+        });
+
+     // --------------Division all method end--------------
+   
+         
+      // --------------District all method start--------------
+        // ------------------District post method -------------
+        app.post('/district', async(req, res) =>{
+            const newDistrict = req.body;
+            const result = await districtCollection.insertOne(newDistrict);
+            res.send(result);
+        }) 
+        // ----------------District get method----------------
+       app.get('/district', async(req, res) =>{
+        const query = {};
+        const cursor = districtCollection.find(query);
+        const district = await cursor.toArray();
+        res.send(district)
+       }) 
+        // -------------------District Delete method ------------------
+        app.delete('/district/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await districtCollection.deleteOne(query)
+            res.send(result);
+          }) 
+        // --------------------District  Update method-----------------------
+        app.put('/district/:id', async(req, res) =>{
+            const id = req.params.id;
+            const district = req.body;
+            const filter = {_id: ObjectId(id)};
+            const options = {upsert: true};
+            const updateDoc = {
+                $set: {
+                    district: district.district,
+                   
+                }
+            };     
+            const result = await districtCollection.updateOne(filter, updateDoc, options);
+            res.send(result);
+        });
+
+     // --------------Distict all method end--------------
 
 
     }
