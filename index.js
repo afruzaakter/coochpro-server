@@ -20,7 +20,8 @@ async function run(){
         await client.connect();
         const genderCollection = client.db('genderList').collection('gender');
         const religionCollection = client.db('religionList').collection('religion');
-        const MaritalStatusCollection = client.db('maritalList').collection('marital');
+        const maritalStatusCollection = client.db('maritalList').collection('marital');
+        const bloodGroupCollection = client.db('bloodGroupList').collection('blood');
 
         // --------------Gender all method start--------------
         // --------------Gender post method--------------
@@ -103,6 +104,86 @@ async function run(){
         });
 
      // --------------Religion  all method end--------------
+
+     // --------------Marital Statas all method start--------------
+        // ------------------Marital Statas post method -------------
+        app.post('/marital', async(req, res) =>{
+            const newReligion = req.body;
+            const result = await maritalStatusCollection.insertOne(newReligion);
+            res.send(result);
+        })
+        // ----------------Marital Statas get method----------------
+       app.get('/marital', async(req, res) =>{
+        const query = {};
+        const cursor = maritalStatusCollection.find(query);
+        const maritals = await cursor.toArray();
+        res.send(maritals)
+       }) 
+        // -------------------Marital Statas Delete method ------------------
+        app.delete('/marital/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await maritalStatusCollection.deleteOne(query)
+            res.send(result);
+          }) 
+        // --------------------Marital Statas  Update method-----------------------
+        app.put('/marital/:id', async(req, res) =>{
+            const id = req.params.id;
+            const marital = req.body;
+            const filter = {_id: ObjectId(id)};
+            const options = {upsert: true};
+            const updateDoc = {
+                $set: {
+                    marital: marital.marital,
+                   
+                }
+            };     
+            const result = await maritalStatusCollection.updateOne(filter, updateDoc, options);
+            res.send(result);
+        });
+
+     // --------------Marital Statas all method end--------------
+
+
+      // --------------Blood Group all method start--------------
+        // ------------------Blood Group post method -------------
+        app.post('/bloodgroup', async(req, res) =>{
+            const newBloodGroup = req.body;
+            const result = await bloodGroupCollection.insertOne(newBloodGroup);
+            res.send(result);
+        })
+        // ----------------Blood Group get method----------------
+       app.get('/bloodgroup', async(req, res) =>{
+        const query = {};
+        const cursor = bloodGroupCollection.find(query);
+        const bloodgroup = await cursor.toArray();
+        res.send(bloodgroup)
+       }) 
+        // -------------------Blood Group Delete method ------------------
+        app.delete('/bloodgroup/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await bloodGroupCollection.deleteOne(query)
+            res.send(result);
+          }) 
+        // --------------------Blood Group  Update method-----------------------
+        app.put('/bloodgroup/:id', async(req, res) =>{
+            const id = req.params.id;
+            const bloodgroup = req.body;
+            const filter = {_id: ObjectId(id)};
+            const options = {upsert: true};
+            const updateDoc = {
+                $set: {
+                    bloodgroup: bloodgroup.bloodgroup,
+                   
+                }
+            };     
+            const result = await bloodGroupCollection.updateOne(filter, updateDoc, options);
+            res.send(result);
+        });
+
+     // --------------Blood Group all method end--------------
+
 
     }
     finally{
