@@ -3,16 +3,20 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const dbConnect = require('./utils/dbConnect');
 require('dotenv').config();
 const port = process.env.PORT || 5000;
+const gendersRouters = require("./routes/v1/gender.route")
 
 app.use(cors())
 app.use(express.json())
 
+dbConnect();
+app.use("/api/v1/gender", gendersRouters)
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.m8gbcys.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-console.log(uri)
+// console.log(uri)
 
 async function run(){
     try{
@@ -28,22 +32,32 @@ async function run(){
         const departmentCollection = client.db('departmentList').collection('department');
         const designationCollection = client.db('designationList').collection('designation');
         const userCollection = client.db('userList').collection('users');
+        const leadsCollection = client.db('leadsList').collection('leads');
+        const businessTypeCollection = client.db('businessList').collection('business');
+
+         //  ***********************************  All Library  Work start ***********************
+
+        
 
         // --------------Gender all method start--------------
         // --------------Gender post method--------------
+
         app.post('/gender', async(req, res) =>{
             const gender = req.body;
             if(!gender.gender){
                 return res.send({success: false, error: "Please Provide all information"})
             }
             const result = await genderCollection.insertOne(gender);
-            res.send({success: true, message: `Successfully inserted ${gender.religion}!` });
+            res.send({success: true, message: `Successfully inserted ${gender.result}!` });
         })
+
         // ---------------Gender get method--------------------
+
         app.get("/gender", async(req, res)=>{
             const gender = await genderCollection.find().toArray();
             res.send(gender)
            })
+
         // --------------------Gender  Update method-----------------------
         app.put('/gender/:id', async(req, res) =>{
             const id = req.params.id;
@@ -68,6 +82,13 @@ async function run(){
             const result = await genderCollection.deleteOne(query)
             res.send(result);
           })       
+        // --------------------Gender Update data show method ------------------
+          app.get('/gender/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await genderCollection.findOne(query)
+            res.send(result);
+          })       
          // --------------Gender all method End-------------- 
 
         // --------------Religion  all method start--------------
@@ -89,6 +110,14 @@ async function run(){
             const result = await religionCollection.deleteOne(query)
             res.send(result);
           }) 
+       // --------------------Religion  Update show data method-----------------------
+       app.get("/religion/:id", async(req, res) =>{
+        const id = req.params.id;
+        const query = {_id: ObjectId(id)};
+        const result = await religionCollection.findOne(query)
+        res.send(result)
+       })
+
         // --------------------Religion  Update method-----------------------
         app.put('/religion/:id', async(req, res) =>{
             const id = req.params.id;
@@ -124,6 +153,13 @@ async function run(){
             const id = req.params.id;
             const query = {_id: ObjectId(id)};
             const result = await maritalStatusCollection.deleteOne(query)
+            res.send(result);
+          }) 
+        // -------------------Marital Statas update data show method ------------------
+        app.get('/marital/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await maritalStatusCollection.findOne(query)
             res.send(result);
           }) 
         // --------------------Marital Statas  Update method-----------------------
@@ -164,6 +200,13 @@ async function run(){
             const result = await bloodGroupCollection.deleteOne(query)
             res.send(result);
           }) 
+        // -------------------Blood Group Update show method ------------------
+        app.get('/bloodgroup/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await bloodGroupCollection.findOne(query)
+            res.send(result);
+          }) 
         // --------------------Blood Group  Update method-----------------------
         app.put('/bloodgroup/:id', async(req, res) =>{
             const id = req.params.id;
@@ -202,6 +245,13 @@ async function run(){
             const result = await locationCollection.deleteOne(query)
             res.send(result);
           }) 
+        // -------------------Location update data show method ------------------
+        app.get('/location/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await locationCollection.findOne(query)
+            res.send(result);
+          }) 
         // --------------------Location  Update method-----------------------
         app.put('/location/:id', async(req, res) =>{
             const id = req.params.id;
@@ -237,6 +287,13 @@ async function run(){
             const id = req.params.id;
             const query = {_id: ObjectId(id)};
             const result = await divisionCollection.deleteOne(query)
+            res.send(result);
+          }) 
+        // -------------------Division update data show method ------------------
+        app.get('/division/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await divisionCollection.findOne(query)
             res.send(result);
           }) 
         // --------------------Division  Update method-----------------------
@@ -278,6 +335,13 @@ async function run(){
             const result = await districtCollection.deleteOne(query)
             res.send(result);
           }) 
+        // -------------------District update data show method ------------------
+        app.get('/district/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await districtCollection.findOne(query)
+            res.send(result);
+          }) 
         // --------------------District  Update method-----------------------
         app.put('/district/:id', async(req, res) =>{
             const id = req.params.id;
@@ -313,6 +377,13 @@ async function run(){
             const id = req.params.id;
             const query = {_id: ObjectId(id)};
             const result = await departmentCollection.deleteOne(query)
+            res.send(result);
+          }) 
+        // -------------------Department Update data show method ------------------
+        app.get('/department/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await departmentCollection.findOne(query)
             res.send(result);
           }) 
         // --------------------Department  Update method-----------------------
@@ -352,6 +423,13 @@ async function run(){
             const result = await designationCollection.deleteOne(query)
             res.send(result);
           }) 
+        // -------------------Designation Update data show method ------------------
+        app.get('/designation/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await designationCollection.findOne(query)
+            res.send(result);
+          }) 
         // --------------------Designation  Update method-----------------------
         app.put('/designation/:id', async(req, res) =>{
             const id = req.params.id;
@@ -369,6 +447,54 @@ async function run(){
         });
 
      // --------------Department all method end--------------
+
+
+      // --------------Business type all method start--------------
+        // ------------------Business typepost method -------------
+        app.post('/business', async(req, res) =>{
+            const newBusiness = req.body;
+            const result = await businessTypeCollection.insertOne(newBusiness);
+            res.send(result);
+        })
+        // ----------------Business type get method----------------
+       app.get("/business", async(req, res)=>{
+        const business = await businessTypeCollection.find().toArray();
+        res.send(business)
+       })
+        // -------------------Business type Delete method ------------------
+        app.delete('/business/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await businessTypeCollection.deleteOne(query)
+            res.send(result);
+          }) 
+        // -------------------Business Update data show method ------------------
+        app.get('/business/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await businessTypeCollection.findOne(query)
+            res.send(result);
+          }) 
+        // --------------------Business type  Update method-----------------------
+        app.put('/business/:id', async(req, res) =>{
+            const id = req.params.id;
+            const business = req.body;
+            const filter = {_id: ObjectId(id)};
+            const options = {upsert: true};
+            const updateDoc = {
+                $set: {
+                    business: business.business,
+                   
+                }
+            };     
+            const result = await businessTypeCollection.updateOne(filter, updateDoc, options);
+            res.send(result);
+        });
+
+     // --------------Business type all method end--------------
+
+    //  ***********************************  All Library  Work end ***********************
+
 
      //-------------- User Profile start---------------------
      //-------------- User Profile  put or  update ---------------------
@@ -408,6 +534,13 @@ async function run(){
                 const result = await userCollection.deleteOne(query)
                 res.send(result);
               }) 
+            // -------------------admin  Update data show method ------------------
+            app.get('/user/:id', async(req, res) =>{
+                const id = req.params.id;
+                const query = {_id: ObjectId(id)};
+                const result = await userCollection.findOne(query)
+                res.send(result);
+              }) 
 
             //   ----------------get admin method-------------
             app.get('/admin/:email', async(req, res) =>{
@@ -417,8 +550,48 @@ async function run(){
                 res.send({admin: isAdmin})
             })
            
-
      //-------------- User Profile end-----------------------
+     //-------------- Leads Entry method start ---------------------
+     //-------------- Leads Insert data Entry method  ---------------------
+     app.post('/leads', async(req, res)=>{
+        const newLeadsEntry= req.body;
+        const result = await leadsCollection.insertOne(newLeadsEntry);
+        res.send(result);
+     })
+     //-------------- Leads get data Entry method  ---------------------
+     app.get('/leads', async(req, res)=>{
+        const companyDetails = await leadsCollection.find().toArray();
+        res.send(companyDetails);
+     })
+
+  //-------------- Leads put data Entry method  ---------------------
+  app.put('/leads/:id', async(req, res) =>{
+    const id = req.params.id;
+    const state = req.body;
+    const filter = {_id: ObjectId(id)};
+    const options = {upsert: true};
+    const updateDoc = {
+        $set: state,
+    }
+    const result = await leadsCollection.updateOne(filter, updateDoc, options);
+    res.send(result);
+  })
+//   ----------------------leads delete method-------------
+  app.delete('/leads/:id', async(req, res) =>{
+    const id = req.params.id;
+    const query = {_id: ObjectId(id)}
+    const result = await leadsCollection.deleteOne(query);
+    res.send(result);
+  })
+//   ----------------------leads Update data show method-------------
+  app.get('/leads/:id', async(req, res) =>{
+    const id = req.params.id;
+    const query = {_id: ObjectId(id)}
+    const result = await leadsCollection.findOne(query);
+    res.send(result);
+  })
+
+     //-------------- Leads Entry method end-----------------------
 
 
     }
