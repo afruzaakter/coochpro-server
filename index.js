@@ -34,6 +34,9 @@ async function run(){
         const userCollection = client.db('userList').collection('users');
         const leadsCollection = client.db('leadsList').collection('leads');
         const businessTypeCollection = client.db('businessList').collection('business');
+        const opportunityCollection = client.db('opportunityList').collection('opportunity');
+        const followUpTypeCollection = client.db('followUpTypeList').collection('followUpType');
+        const followUpCollection = client.db('followUpList').collection('followUp');
 
          //  ***********************************  All Library  Work start ***********************
 
@@ -491,7 +494,96 @@ async function run(){
             res.send(result);
         });
 
-     // --------------Business type all method end--------------
+     // --------------Opportunity  all method end--------------
+
+      // --------------Opportunity  all method start--------------
+        // ------------------Opportunity typepost method -------------
+        app.post('/opportunity', async(req, res) =>{
+            const newOpportunity = req.body;
+            const result = await opportunityCollection.insertOne(newOpportunity);
+            res.send(result);
+        })
+        // ----------------Opportunity  get method----------------
+       app.get("/opportunity", async(req, res)=>{
+        const opportunity = await opportunityCollection.find().toArray();
+        res.send(opportunity)
+       })
+        // -------------------Opportunity  Delete method ------------------
+        app.delete('/opportunity/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await opportunityCollection.deleteOne(query)
+            res.send(result);
+          }) 
+        // -------------------Opportunity Update data show method ------------------
+        app.get('/opportunity/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await opportunityCollection.findOne(query)
+            res.send(result);
+          }) 
+        // --------------------Opportunity  Update method-----------------------
+        app.put('/opportunity/:id', async(req, res) =>{
+            const id = req.params.id;
+            const opportunity = req.body;
+            const filter = {_id: ObjectId(id)};
+            const options = {upsert: true};
+            const updateDoc = {
+                $set: {
+                  opportunity: opportunity.opportunity,
+                   
+                }
+            };     
+            const result = await opportunityCollection.updateOne(filter, updateDoc, options);
+            res.send(result);
+        });
+
+     // --------------Opportunity all method end--------------
+     
+
+      // --------------Follow Up Type all method start--------------
+        // ------------------Follow Up Type typepost method -------------
+        app.post('/followUpType', async(req, res) =>{
+            const newFollowUpType = req.body;
+            const result = await followUpTypeCollection.insertOne(newFollowUpType);
+            res.send(result);
+        })
+        // ----------------Follow Up Type  get method----------------
+       app.get("/followUpType", async(req, res)=>{
+        const followUpType = await followUpTypeCollection.find().toArray();
+        res.send(followUpType)
+       })
+        // -------------------Follow Up Type  Delete method ------------------
+        app.delete('/followUpType/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await followUpTypeCollection.deleteOne(query)
+            res.send(result);
+          }) 
+        // -------------------Follow Up Type  Update data show method ------------------
+        app.get('/followUpType/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await followUpTypeCollection.findOne(query)
+            res.send(result);
+          }) 
+        // --------------------Follow Up Type  Update method-----------------------
+        app.put('/followUpType/:id', async(req, res) =>{
+            const id = req.params.id;
+            const followUpType = req.body;
+            const filter = {_id: ObjectId(id)};
+            const options = {upsert: true};
+            const updateDoc = {
+                $set: {
+                  followUpType: followUpType.followUpType,
+                   
+                }
+            };     
+            const result = await followUpTypeCollection.updateOne(filter, updateDoc, options);
+            res.send(result);
+        });
+
+     // --------------Follow Up Type all method end--------------
 
     //  ***********************************  All Library  Work end ***********************
 
@@ -592,6 +684,27 @@ async function run(){
   })
 
      //-------------- Leads Entry method end-----------------------
+     //----------------Follow Up page all method Start-------------
+     //----------------Follow Up page insert data post method Start-------------
+     app.post('/followUp', async(req, res) =>{
+      const newFollowUp = req.body;
+      const result = await followUpCollection.insertOne(newFollowUp);
+      res.send(result)
+     })
+     //----------------Follow Up page get method -------------
+     app.get('/followUp', async(req,res) =>{
+      const followUp = await followUpCollection.find().toArray();
+      res.send(followUp);
+     })
+     //----------------Follow Up Delete method -------------
+   app.delete('/followUp/:id', async(req, res) =>{
+    const id = req.params.id;
+    const query = {_id: ObjectId(id)}
+    const result = await followUpCollection.deleteOne(query);
+    res.send(result);
+   })
+    
+     //----------------Follow Up page all method End-------------
 
 
     }
