@@ -732,7 +732,7 @@ app.get('/', (req, res) => {
   res.send('Server is Running')
 });
 
-
+module.exports = app;
 
 
 
